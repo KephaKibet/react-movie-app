@@ -7,16 +7,17 @@ function MovieListPage() {
     const [searchTerm, setSearchTerm] = useState('')
     const [movies, setMovies] = useState([])
     const [noMoviesFound, setNoMoviesFound] = useState(false)
+
     useEffect(() => {
         // get movie name from local storage 
         let term = localStorage.getItem("searchTerm")
         if(term) {
-          fetchMovies(term)
+            fetchMovies(term)
         }
     },[])
 
     const handleSearchTermChange = (e) => {
-setSearchTerm(e.target.value)
+        setSearchTerm(e.target.value)
     }
 
     const clearResults = () => {
@@ -37,7 +38,7 @@ setSearchTerm(e.target.value)
         .then(result => {
 
             if(result.Error) {
-                 setMovies([])
+                setMovies([])
                 setNoMoviesFound(true)
             } else {
                 setMovies(result.Search)
@@ -51,49 +52,57 @@ setSearchTerm(e.target.value)
         return (
             <div key={movie.imdbID}>
                 <div class="col">
-          <div class="card shadow-sm">
-            <svg width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                <img src = {movie.Poster == "N/A" ?"/missingmovie.jpg" : movie.Poster } class="bd-placeholder-img card-img-top" />
-                <div class="card-body">
-                    <h2>{movie.Title}</h2>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                                    <NavLink to = {`/${movie.imdbID}`}>
-                                   <button type="button" class="btn btn-sm btn-outline-secondary">Details</button>
-                                   </NavLink>
-                        </div>
-                        <small class="text-muted">{movie.Year}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-                
-                <NavLink to = {`/${movie.imdbID}`}>
-                    <button>Details</button>
+                    <div class="card shadow-sm">
+                    <img src = {movie.Poster == "N/A" ? '/missingPoster.jpg' : movie.Poster } class="bd-placeholder-img card-img-top" />
+           
+
+                        <div class="card-body">
+                   <h2>{movie.Title}</h2>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                                      <NavLink to = {`/${movie.imdbID}`}>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Details</button>
                 </NavLink>
+                </div>
+                <small class="text-muted">{movie.Year}</small>
+              </div>
+            </div>
+          </div>
+        </div> 
             </div>
         )
     })
 
     return (
         <div>
-            <section class="py-5 text-center container">
-                <div class="row py-lg-5">
-      <             div class="col-lg-6 col-md-8 mx-auto">
-                        <h1 class="fw-light">Movie Search</h1>
-                        <p class="lead text-muted">We want to help you find the bets movie you can think of. Start Search and see for yourself.</p>
+             <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Movie Search</h1>
+        <p class="lead text-muted">vWant to watch a movie?, Don't remember its name? find it here with a keyword.</p>
+           <p><input type = "text" onChange = {handleSearchTermChange} placeholder='search' /></p>             
                         <p>
-                        <p>
-                        <input type = "text" onChange = {handleSearchTermChange} />
-                        </p>
-                        <button onClick={() => fetchMovies(searchTerm)} class="btn btn-primary my-2">Search</button>
-                        <button onClick = {clearResults} class="btn btn-secondary my-2">Clear Results</button>
-                        </p> 
+                            <button onClick={() => fetchMovies(searchTerm)} class="btn btn-primary my-2 me-3">Search</button>
+                             <button onClick = {clearResults}class="btn btn-secondary my-2">Clear Results</button>
+        </p>
+      </div>
+    </div>
+  </section> 
+           
+           <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        
+            {movieItems}
                     </div>
                 </div>
-              
-            </ section>
+                </div>
+            {noMoviesFound ? <h1>No movies found</h1> : null}
+
         </div>
-)}
+    )
+
+}
 
 export default MovieListPage 
